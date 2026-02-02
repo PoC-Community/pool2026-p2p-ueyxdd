@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
+import "./interfaces/ISmartContract.sol";
 
-contract SmartContract {
-    
-    //Public
-    
+contract SmartContract is ISmartContract {
     uint256 public halfAnswerOfLife = 21;
     address public myEthereumContractAddress = address(this);
     address public myEthereumAddress = msg.sender;
     string public PoCIsWhat = "PoC is good, PoC is life.";
-    
-    //Internal
-    
+
     bool internal _areYouABadPerson = false;
-    
-    //Private 
-    
+
     int256 private _youAreACheater = -42;
 
-    bytes32 _whoIsTheBest = 0x626c756500000000000000000000000000000000000000000000000000000000;
+    bytes32 _whoIsTheBest =
+        0x626c756500000000000000000000000000000000000000000000000000000000;
+
     mapping(string => uint256) public myGrades;
     string[5] public myPhoneNumber;
-    enum roleEnum { STUDENT, TEACHER }
+
+    enum roleEnum {
+        STUDENT,
+        TEACHER
+    }
 
     struct informations {
         string firstName;
@@ -31,11 +31,82 @@ contract SmartContract {
         roleEnum role;
     }
 
-    informations public myinformations = informations({
-        firstName: "Ethan",
-        lastName: "Vuillard",
-        age: 19,
-        city: "Clamart",
-        role: roleEnum.STUDENT
-    });
+    informations public myinformations =
+        informations({
+            firstName: "Ethan",
+            lastName: "Vuillard",
+            age: 19,
+            city: "Clamart",
+            role: roleEnum.STUDENT
+        });
+
+    function getHalfAnswerOfLife() public view returns (uint256) {
+        return halfAnswerOfLife;
+    }
+
+    function _getMyEthereumContractAddress() internal view returns (address) {
+        return myEthereumContractAddress;
+    }
+
+    function getPoCIsWhat() external view returns (string memory) {
+        return PoCIsWhat;
+    }
+
+    function _setAreYouABadPerson(bool _value) internal {
+        _areYouABadPerson = _value;
+    }
+
+    function editMyCity(string calldata _newCity) public {
+        myinformations.city = _newCity;
+    }
+
+    function getMyFullName() public view returns (string memory) {
+        return string(
+            abi.encodePacked(myinformations.firstName, " ", myinformations.lastName)
+        );
+    }
+
+    address private owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the owner");
+        _;
+    }
+
+    function completeHalfAnswerOfLife() public onlyOwner {
+        halfAnswerOfLife += 21;
+    }
+
+    function hashMyMessage(string calldata _message) public pure returns (bytes32) {
+        return keccak256(abi.encodePacked(_message));
+    }
+
+    mapping(address => uint256) public balances;
+
+    event BalanceUpdated(address indexed user, uint256 newBalance);
+
+    error InsufficientBalance(uint256 available, uint256 requested);
+
+    function getMyBalance() public view returns (uint256) {
+        return balances[msg.sender];
+    }
+
+    function addToBalance() public payable {
+        balances[msg.sender] += msg.value;
+        emit BalanceUpdated(msg.sender, balances[msg.sender]);
+    }
+
+    function withdrawFromBalance(uint256 _amount) public {
+        if (balances[msg.sender] < _amount) {
+            revert InsufficientBalance(balances[msg.sender], _amount);
+        }
+        balances[msg.sender] -= _amount;
+        (bool success, ) = msg.sender.call{value: _amount}("");
+        require(success);
+        emit BalanceUpdated(msg.sender, balances[msg.sender]);
+    }
 }
