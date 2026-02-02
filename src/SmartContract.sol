@@ -19,8 +19,7 @@ contract SmartContract is ISmartContract {
     string[5] public myPhoneNumber;
 
     enum roleEnum {
-        STUDENT,
-        TEACHER
+        STUDENT,TEACHER
     }
 
     struct informations {
