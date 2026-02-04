@@ -37,10 +37,10 @@ contract SmartContractTest is Test {
             SmartContract.roleEnum role
         ) = helper.myinformations();
 
-        assertEq(firstName, "Ethan");
-        assertEq(lastName, "Vuillard");
+        assertEq(firstName, "test");
+        assertEq(lastName, "test");
         assertEq(age, 19);
-        assertEq(city, "Clamart");
+        assertEq(city, "Paris");
         assertEq(uint(role), uint(SmartContract.roleEnum.STUDENT));
     }
 }
