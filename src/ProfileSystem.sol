@@ -28,8 +28,8 @@ contract ProfileSystem {
         _;
     }
 
-    function createProfile(string calldata _Ethan) external {
-        if (bytes(_Ethan).length == 0) {
+    function createProfile(string calldata _sqa) external {
+        if (bytes(_sqa).length == 0) {
             revert EmptyUsername();
         }
 
@@ -38,7 +38,7 @@ contract ProfileSystem {
         }
 
         profiles[msg.sender] = UserProfile(
-            _Ethan,
+            _sqa,
             1,
             roleEnum.USER,
             block.timestamp
@@ -52,5 +52,4 @@ contract ProfileSystem {
 
     event ProfileCreated(address indexed user, string username);
     event LevelUp(address indexed user, uint256 newLevel);
-
 }

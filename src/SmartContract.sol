@@ -32,10 +32,10 @@ contract SmartContract is ISmartContract {
 
     informations public myinformations =
         informations({
-            firstName: "Ethan",
-            lastName: "Vuillard",
+            firstName: "test",
+            lastName: "test",
             age: 19,
-            city: "Clamart",
+            city: "Paris",
             role: roleEnum.STUDENT
         });
 
